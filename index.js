@@ -4,6 +4,7 @@ const app = express()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //port set
 const port = process.env.PORT || 5000
+var jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 // middle ware
@@ -71,6 +72,7 @@ async function run() {
             const result = await userCollection.insertOne(user)
             res.send(result)
         })
+      
     }
     finally {
 
