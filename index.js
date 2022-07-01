@@ -21,8 +21,9 @@ async function run() {
 
         await client.connect()
         const billCollection = client.db('power-hack').collection('billingList')
+        const userCollection = client.db('power-hack').collection('user')
 
-
+        // BILL COLLECTION API
         app.get('/billing-list', async (req, res) => {
             const clickPage = parseInt(req.query.clickPage)
             const perPageData = parseInt(req.query.perPageData)
@@ -34,7 +35,7 @@ async function run() {
             }
             res.send(billList)
         })
-
+        //FOR PAGINATION
         app.get('/billing-count', async (req, res) => {
             const cursor = await billCollection.estimatedDocumentCount()
             res.send({ cursor })
@@ -45,7 +46,7 @@ async function run() {
             const result = await billCollection.insertOne(billDoc)
             res.send(result)
         })
-
+        // FOR DELETE API
         app.delete('/delete-billing/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
@@ -61,6 +62,13 @@ async function run() {
                 $set: bill
             }
             const result = await billCollection.updateOne(filter, updateDoc, option)
+            res.send(result)
+        })
+
+        // USER API COLLECTION
+        app.post('/registration',async(req, res)=>{
+            const user = req.body
+            const result = await userCollection.insertOne(user)
             res.send(result)
         })
     }
