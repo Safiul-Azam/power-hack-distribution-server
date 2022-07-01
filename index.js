@@ -24,20 +24,22 @@ async function run() {
 
 
         app.get('/billing-list', async (req, res) => {
-            const clickPage = req.query.clickPage
-            const perPageData = req.query.perPageData
+            const clickPage = parseInt(req.query.clickPage)
+            const perPageData = parseInt(req.query.perPageData)
             let billList;
             if (clickPage || perPageData) {
                 billList = await billCollection.find().skip(clickPage * perPageData).limit(perPageData).toArray()
-            } else {
+            }else{
                 billList = await billCollection.find().toArray()
             }
             res.send(billList)
         })
+
         app.get('/billing-count', async (req, res) => {
             const cursor = await billCollection.estimatedDocumentCount()
             res.send({ cursor })
         })
+        
         app.post('/add-billing', async (req, res) => {
             const billDoc = req.body
             const result = await billCollection.insertOne(billDoc)
